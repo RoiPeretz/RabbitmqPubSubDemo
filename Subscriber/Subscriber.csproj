@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\MessageBroker.Common\MessageBroker.Common.csproj" />
+    <ProjectReference Include="..\MessageBroker.Common\MessageBroker.Common.csproj" />
   </ItemGroup>
 
 </Project>
