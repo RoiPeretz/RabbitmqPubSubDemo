@@ -16,15 +16,28 @@ public class Publisher: IDisposable, IPublisher
 
     public void Publish(string topic, string message)
     {
-        _channel.ExchangeDeclare(exchange: topic, type: ExchangeType.Fanout);
-        
-        var messageInBytes = Encoding.UTF8.GetBytes(message);
-        Thread.Sleep(300);
-        _channel.BasicPublish(exchange: topic,
-            routingKey: "",
-            basicProperties: null,
-            body: messageInBytes);
-        Console.WriteLine(" [x] Sent {0}", message);
+        try
+        {
+            _channel.ExchangeDeclare(exchange: topic, type: ExchangeType.Fanout);
+
+            _channel.QueueDeclare(queue: topic,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+
+            var messageInBytes = Encoding.UTF8.GetBytes(message);
+            Thread.Sleep(300);
+            _channel.BasicPublish(exchange: "",
+                routingKey: topic,
+                basicProperties: null,
+                body: messageInBytes);
+            Console.WriteLine(" [x] Sent {0}", message);
+        }
+        catch (Exception ex)
+        {
+            //TODO - set result when we add return type
+        }
     }
 
     public void Dispose()
